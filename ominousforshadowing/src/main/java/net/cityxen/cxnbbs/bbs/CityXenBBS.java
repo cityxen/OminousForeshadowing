@@ -1,6 +1,8 @@
 package net.cityxen.cxnbbs.bbs;
 
 import eu.sblendorio.bbs.core.PetsciiThread;
+import eu.sblendorio.bbs.core.Colors;
+import eu.sblendorio.bbs.core.Keys;
 
 public class CityXenBBS extends PetsciiThread {
 
@@ -8,7 +10,29 @@ public class CityXenBBS extends PetsciiThread {
 
 	    @Override
 	    public void doLoop() throws Exception {
-	    	  print("Hello CXN World");
-	    }
+			print("Hello CXN World");
+			logo();
+			write(Colors.RED);
+			print("Ominous Foreshadowing");
+		}
 
+		private void logo() throws Exception {
+			write(Keys.CLR, Keys.LOWERCASE, Keys.CASE_LOCK);
+			write(LOGO);
+			
+			write(Colors.GREY3); gotoXY(0,5);
+		}
+		private final static byte[] LOGO = {
+			32, 32, 28, -95, 32, 32, -41, 69, 76, 67, 79, 77, 69, 32, 84, 79,
+			32, -95, 32, 32, 32, 18, -95, -110, 13, 32, 18, -95, -95, -65, -110, 32,
+			-69, -94, 32, -84, 32, -84, 32, -84, -69, 32, -84, -66, 32, -84, -69, -95,
+			32, 32, 32, (byte) Colors.CYAN, -56, -49, -51, -59, -96, -49, -58, -96, -44, -56, -59, 13,
+			32, 18, 28, -68, -65, -110, -69, 32, 18, -84, -110, 32, 32, -95, -95, 18,
+			-65, -110, -84, -66, 18, -95, -110, 32, 18, -65, -110, 32, -84, -66, 18, -95,
+			-110, 32, (byte) Colors.CYAN, -61, -49, -51, -51, -49, -60, -49, -46, -59, 32, 54, 52, 32,
+			-57, -63, -51, -59, -45, 13, 18, 28, -95, -110, 32, 32, -95, 18, -95, -110,
+			32, 32, 18, -95, -110, 32, -65, -66, -68, -94, -66, 32, -65, -66, -68, -94,
+			-66, 18, -68, -110, 13
+		};
 }
+

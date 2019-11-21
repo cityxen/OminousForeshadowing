@@ -70,7 +70,7 @@ public class CityXenBBS extends PetsciiThread {
 
 		private void ReadPETmateJSON(String File) throws Exception {
 
-			// This was a bitch
+			// This was very difficult to figure out
 
 			HashMap<Integer,Integer> codehash =new HashMap<Integer,Integer>();
 

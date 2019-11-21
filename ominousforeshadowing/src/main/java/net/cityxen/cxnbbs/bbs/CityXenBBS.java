@@ -24,51 +24,36 @@ public class CityXenBBS extends PetsciiThread {
 	    @Override
 	    public void doLoop() throws Exception {
 	    	write(Keys.CLR);
-	    	print("Hello CXN World\r");
 			write(Colors.RED);
-			print("Ominous Foreshadowing\r");
+			print("Welcome to Ominous Foreshadowing...\r");
+			sleep(5000);
+
 			write(Colors.GREEN);
-			print("Secuirty Groups\r");
+			print("Security Groups\r");
 			List<Security> groups = securityRepository.findAll();
 			for (Security security : groups) {
 				print(security.getName()+"\r");
 			}
+			sleep(5000);
 
 			ReadPETmateJSON("ominousforeshadowing/resources/art/cityxen-logo-1.json");
 			sleep(5000);
+			
 			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing3.json");
 			sleep(5000);
+			
 			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing2.json");
-			sleep(5000);			
+			sleep(5000);
+			
 			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing1.json");
 			sleep(5000);
+			
+			write(Keys.HOME);
 			ReadPETmateJSON("ominousforeshadowing/resources/art/10x10-test.json");
 			sleep(5000);
 			
-
-
-
-		}
-
-		private void logo() throws Exception {
-			write(Keys.CLR, Keys.UPPERCASE, Keys.CASE_LOCK);
-			write(LOGO);
 			
-			write(Colors.GREY3); gotoXY(0,5);
 		}
-		private final static byte[] LOGO = {
-			32, 32, 28, -95, 32, 32, -41, 69, 76, 67, 79, 77, 69, 32, 84, 79,
-			32, -95, 32, 32, 32, 18, -95, -110, 13, 32, 18, -95, -95, -65, -110, 32,
-			-69, -94, 32, -84, 32, -84, 32, -84, -69, 32, -84, -66, 32, -84, -69, -95,
-			32, 32, 32, (byte) Colors.CYAN, -56, -49, -51, -59, -96, -49, -58, -96, -44, -56, -59, 13,
-			32, 18, 28, -68, -65, -110, -69, 32, 18, -84, -110, 32, 32, -95, -95, 18,
-			-65, -110, -84, -66, 18, -95, -110, 32, 18, -65, -110, 32, -84, -66, 18, -95,
-			-110, 32, (byte) Colors.CYAN, -61, -49, -51, -51, -49, -60, -49, -46, -59, 32, 54, 52, 32,
-			-57, -63, -51, -59, -45, 13, 18, 28, -95, -110, 32, 32, -95, 18, -95, -110,
-			32, 32, 18, -95, -110, 32, -65, -66, -68, -94, -66, 32, -65, -66, -68, -94,
-			-66, 18, -68, -110, 13
-		};
-
 
 		private void ReadPETmateJSON(String File) throws Exception {
 
@@ -109,16 +94,14 @@ public class CityXenBBS extends PetsciiThread {
 			Long width  = (Long) ((JSONObject)framebufs.get(0)).get("width");
 			Long height = (Long) ((JSONObject)framebufs.get(0)).get("height");
 
-			System.out.println("\nFile: "+File+" (CHARSET: ["+charset+"] WIDTH: ["+width+"] HEIGHT: ["+height+"])");
-
-			// write(Keys.CLR);
+			// System.out.println("\nFile: "+File+" (CHARSET: ["+charset+"] WIDTH: ["+width+"] HEIGHT: ["+height+"])");
 
 			if(charset.equals((String)"upper")) {
-				System.out.println(" \n WRITING UPPERCASE \n");
+				// System.out.println(" \n WRITING UPPERCASE \n");
 				write(Keys.UPPERCASE,Keys.CASE_LOCK);
 			}
 			else {
-				System.out.println(" \n WRITING LOWERCASE \n");
+				// System.out.println(" \n WRITING LOWERCASE \n");
 				write(Keys.LOWERCASE,Keys.CASE_LOCK);
 			}
 
@@ -128,7 +111,7 @@ public class CityXenBBS extends PetsciiThread {
 			Integer compcode;
 			int linecounter=0;
 			int DrawSize=screencodes.size();
-			if(width==40) { DrawSize--; }
+			// if(width==40) { DrawSize--; }
 
 			for (int i = 0; i < DrawSize; i++) {
 				if(width<40) {
@@ -152,7 +135,6 @@ public class CityXenBBS extends PetsciiThread {
 				write(outcode);
 				linecounter++;
 			}
-			write(Keys.HOME);
 		};
 
 }

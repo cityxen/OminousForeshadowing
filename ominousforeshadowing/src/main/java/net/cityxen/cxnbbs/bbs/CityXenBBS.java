@@ -42,6 +42,8 @@ public class CityXenBBS extends PetsciiThread {
 			sleep(5000);			
 			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing1.json");
 			sleep(5000);
+			ReadPETmateJSON("ominousforeshadowing/resources/art/10x10-test.json");
+			sleep(5000);
 			
 
 
@@ -69,11 +71,6 @@ public class CityXenBBS extends PetsciiThread {
 
 
 		private void ReadPETmateJSON(String File) throws Exception {
-
-			// This was very difficult to figure out
-			// Note: when doing art work, must take into account that the bottom right character needs to be
-			// black so that all characters will fit onto the screen
-			// It does not draw the last character otherwise it scrolls off the top portion
 
 			HashMap<Integer,Integer> codehash =new HashMap<Integer,Integer>();
 
@@ -108,16 +105,43 @@ public class CityXenBBS extends PetsciiThread {
 			JSONArray framebufs = (JSONArray) json.get("framebufs");
 			JSONArray screencodes = (JSONArray) ((JSONObject) framebufs.get(0)).get("screencodes");
 			JSONArray colors = (JSONArray) ((JSONObject) framebufs.get(0)).get("colors");
+			String charset = (String) ((JSONObject)framebufs.get(0)).get("charset");
+			Long width  = (Long) ((JSONObject)framebufs.get(0)).get("width");
+			Long height = (Long) ((JSONObject)framebufs.get(0)).get("height");
 
-			write(Keys.CLR, Keys.UPPERCASE, Keys.CASE_LOCK);
+			System.out.println("\nFile: "+File+" (CHARSET: ["+charset+"] WIDTH: ["+width+"] HEIGHT: ["+height+"])");
+
+			// write(Keys.CLR);
+
+			if(charset.equals((String)"upper")) {
+				System.out.println(" \n WRITING UPPERCASE \n");
+				write(Keys.UPPERCASE,Keys.CASE_LOCK);
+			}
+			else {
+				System.out.println(" \n WRITING LOWERCASE \n");
+				write(Keys.LOWERCASE,Keys.CASE_LOCK);
+			}
 
 			Integer outcolor;
+			Integer lastcolor=null;
 			Integer outcode;
 			Integer compcode;
+			int linecounter=0;
+			int DrawSize=screencodes.size();
+			if(width==40) { DrawSize--; }
 
-			for (int i = 0; i < screencodes.size()-1 ; i++) {
+			for (int i = 0; i < DrawSize; i++) {
+				if(width<40) {
+					if(linecounter==width) {
+						write(Keys.RETURN);
+						linecounter=0;
+					}
+				}				
 				outcolor = colorhash.get((int) (long) colors.get(i));
-				write(outcolor);
+				if(lastcolor!=outcolor) {
+					write(outcolor);
+					lastcolor=outcolor;
+				}
 				outcode  = (int)(long)screencodes.get(i);
 				if(outcode>127) write(Keys.REVON);
 				else write(Keys.REVOFF);
@@ -126,6 +150,7 @@ public class CityXenBBS extends PetsciiThread {
 					outcode=compcode;
 				}
 				write(outcode);
+				linecounter++;
 			}
 			write(Keys.HOME);
 		};

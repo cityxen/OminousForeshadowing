@@ -1,0 +1,26 @@
+{
+	"title":"Main Menu",
+	"secLevel":0,
+	"hasBackToMain":false,
+	"hasLogoff":true,
+	"items":[
+		{"name":"Bulliten Boards",
+		"action":"board",
+		"secLevel":1},
+		{"name":"Chat",
+		"action":"chat",
+		"secLevel":2},
+		{"name":"Download",
+		"action":"download",
+		"secLevel":1},
+		{"name":"Page Sysop",
+		"action":"sysop",
+		"secLevel":1},
+		{"name":"User Settings",
+		"action":"profile",
+		"secLevel":1},
+		{"name":"System News",
+		"action":"news",
+		"secLevel":0}
+	]
+}

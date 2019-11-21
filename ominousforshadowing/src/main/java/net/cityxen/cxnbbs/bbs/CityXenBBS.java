@@ -1,19 +1,32 @@
 package net.cityxen.cxnbbs.bbs;
 
-import eu.sblendorio.bbs.core.PetsciiThread;
+import java.util.List;
+
 import eu.sblendorio.bbs.core.Colors;
 import eu.sblendorio.bbs.core.Keys;
+import eu.sblendorio.bbs.core.PetsciiThread;
+import net.cityxen.cxnbbs.dao.SecurityRepository;
+import net.cityxen.cxnbbs.domain.Security;
+import net.cityxen.cxnbbs.util.SpringContext;
 
 public class CityXenBBS extends PetsciiThread {
 
-	    public CityXenBBS() {}
+	SecurityRepository securityRepository = SpringContext.getBean(SecurityRepository.class);
+	
+	public CityXenBBS() {}
 
 	    @Override
 	    public void doLoop() throws Exception {
-			print("Hello CXN World");
-			logo();
+	    	write(Keys.CLR);
+	    	print("Hello CXN World\r");
 			write(Colors.RED);
-			print("Ominous Foreshadowing");
+			print("Ominous Foreshadowing\r");
+			write(Colors.GREEN);
+			print("Secuirty Groups\r");
+			List<Security> groups = securityRepository.findAll();
+			for (Security security : groups) {
+				print(security.getName()+"\r");
+			}
 		}
 
 		private void logo() throws Exception {

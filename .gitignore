@@ -5,3 +5,5 @@ ominousforeshadowing/.project
 ominousforeshadowing/.vscode
 ominousforeshadowing/.factorypath
 ominousforeshadowing/src/main/resources/application.properties
+launch.json
+petscii-bbs.log

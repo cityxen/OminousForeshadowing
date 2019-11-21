@@ -1,16 +1,12 @@
 package net.cityxen.cxnbbs.bbs;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
-// import java.io.FileNotFoundException;
-// import java.io.PrintWriter;
-// import java.util.LinkedHashMap; 
-// import java.util.Map; 
-// import java.util.Iterator;
 
 import eu.sblendorio.bbs.core.Colors;
 import eu.sblendorio.bbs.core.Keys;
@@ -38,12 +34,22 @@ public class CityXenBBS extends PetsciiThread {
 				print(security.getName()+"\r");
 			}
 
-			ReadPETmateJSON("resources/art/ominousforeshadowing1.json");
+			ReadPETmateJSON("ominousforeshadowing/resources/art/cityxen-logo-1.json");
+			sleep(5000);
+			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing3.json");
+			sleep(5000);
+			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing2.json");
+			sleep(5000);			
+			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing1.json");
+			sleep(5000);
+			
+
+
 
 		}
 
 		private void logo() throws Exception {
-			write(Keys.CLR, Keys.LOWERCASE, Keys.CASE_LOCK);
+			write(Keys.CLR, Keys.UPPERCASE, Keys.CASE_LOCK);
 			write(LOGO);
 			
 			write(Colors.GREY3); gotoXY(0,5);
@@ -63,31 +69,61 @@ public class CityXenBBS extends PetsciiThread {
 
 
 		private void ReadPETmateJSON(String File) throws Exception {
-			/*
-			 petmate json format:
-			 {
-				framebufs: [{
-					screencodes: [1,2,3,etc...]
-					colors: [1,2,3,4,etc]
-				}
-				]
-			}
-			*/
+
+			// This was a bitch
+
+			HashMap<Integer,Integer> codehash =new HashMap<Integer,Integer>();
+
+			for(int i = 0; i < 32; i++)    { codehash.put(i,i+64);  }
+			for(int i = 64; i < 96; i++)   { codehash.put(i,i+128); }
+			for(int i = 96; i < 128; i++)  { codehash.put(i,i+64);  }			
+			for(int i = 128; i < 160; i++) { codehash.put(i,i-64);  }
+			for(int i = 160; i < 192; i++) { codehash.put(i,i-128); }
+			for(int i = 224; i < 256; i++) { codehash.put(i,i-64);  }
+
+			HashMap<Integer,Integer> colorhash=new HashMap<Integer,Integer>();
+
+			colorhash.put(0,Colors.BLACK);
+			colorhash.put(1,Colors.WHITE);
+			colorhash.put(2,Colors.RED);
+			colorhash.put(3,Colors.CYAN);
+			colorhash.put(4,Colors.PURPLE);
+			colorhash.put(5,Colors.GREEN);
+			colorhash.put(6,Colors.BLUE);
+			colorhash.put(7,Colors.YELLOW);
+			colorhash.put(8,Colors.ORANGE);
+			colorhash.put(9,Colors.BROWN);			
+			colorhash.put(10,Colors.LIGHT_RED);
+			colorhash.put(11,Colors.GREY1);
+			colorhash.put(12,Colors.GREY2);
+			colorhash.put(13,Colors.LIGHT_GREEN);
+			colorhash.put(14,Colors.LIGHT_BLUE);
+			colorhash.put(15,Colors.GREY3);
+
 			Object jpars = new JSONParser().parse(new FileReader(File));
 			JSONObject json = (JSONObject) jpars;
 			JSONArray framebufs = (JSONArray) json.get("framebufs");
-			System.out.println(((JSONObject) framebufs.get(0)).get("screencodes"));
-			System.out.println(((JSONObject) framebufs.get(0)).get("colors"));
-			//System.out.println(screencodes);
-			//  print(jscn.toString());
-			// "screencodes"
-			// String screencodes = json.getJSONObject("framebufs").getString("screencodes");
-			//for (int i = 0; i < jarr.size(); i++) {
-    			// JSONObject code = jarr.getJSONObject(i); 
-				// println(id + ", " + species + ", " + name);
-			//}
-			// String screencodes = arr.getJSONObject(0).ge
-			// write(jarr.toString());
+			JSONArray screencodes = (JSONArray) ((JSONObject) framebufs.get(0)).get("screencodes");
+			JSONArray colors = (JSONArray) ((JSONObject) framebufs.get(0)).get("colors");
+
+			write(Keys.CLR, Keys.UPPERCASE, Keys.CASE_LOCK);
+
+			Integer outcolor;
+			Integer outcode;
+			Integer compcode;
+
+			for (int i = 0; i < screencodes.size() ; i++) {
+				outcolor = colorhash.get((int) (long) colors.get(i));
+				write(outcolor);
+				outcode  = (int)(long)screencodes.get(i);
+				if(outcode>127) write(Keys.REVON);
+				else write(Keys.REVOFF);
+				compcode = codehash.get(outcode);
+				if(compcode!=null) {
+					outcode=compcode;
+				}
+				write(outcode);
+			}
 		};
 }
 

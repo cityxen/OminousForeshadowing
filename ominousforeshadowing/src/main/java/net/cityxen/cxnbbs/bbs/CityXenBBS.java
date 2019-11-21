@@ -71,6 +71,9 @@ public class CityXenBBS extends PetsciiThread {
 		private void ReadPETmateJSON(String File) throws Exception {
 
 			// This was very difficult to figure out
+			// Note: when doing art work, must take into account that the bottom right character needs to be
+			// black so that all characters will fit onto the screen
+			// It does not draw the last character otherwise it scrolls off the top portion
 
 			HashMap<Integer,Integer> codehash =new HashMap<Integer,Integer>();
 
@@ -112,7 +115,7 @@ public class CityXenBBS extends PetsciiThread {
 			Integer outcode;
 			Integer compcode;
 
-			for (int i = 0; i < screencodes.size() ; i++) {
+			for (int i = 0; i < screencodes.size()-1 ; i++) {
 				outcolor = colorhash.get((int) (long) colors.get(i));
 				write(outcolor);
 				outcode  = (int)(long)screencodes.get(i);
@@ -124,6 +127,8 @@ public class CityXenBBS extends PetsciiThread {
 				}
 				write(outcode);
 			}
+			write(Keys.HOME);
 		};
+
 }
 

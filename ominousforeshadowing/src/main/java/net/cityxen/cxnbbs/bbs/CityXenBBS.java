@@ -18,7 +18,7 @@ import net.cityxen.cxnbbs.util.SpringContext;
 public class CityXenBBS extends PetsciiThread {
 
 	SecurityRepository securityRepository = SpringContext.getBean(SecurityRepository.class);
-	
+
 	public CityXenBBS() {}
 
 	    @Override
@@ -26,7 +26,7 @@ public class CityXenBBS extends PetsciiThread {
 	    	write(Keys.CLR);
 			write(Colors.RED);
 			print("Welcome to Ominous Foreshadowing...\r");
-			sleep(5000);
+			//sleep(5000);
 
 			write(Colors.GREEN);
 			print("Security Groups\r");
@@ -34,25 +34,24 @@ public class CityXenBBS extends PetsciiThread {
 			for (Security security : groups) {
 				print(security.getName()+"\r");
 			}
-			sleep(5000);
+			//sleep(5000);
 
 			ReadPETmateJSON("ominousforeshadowing/resources/art/cityxen-logo-1.json");
 			sleep(5000);
-			
+
 			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing3.json");
 			sleep(5000);
-			
+
 			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing2.json");
 			sleep(5000);
-			
+
 			ReadPETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing1.json");
 			sleep(5000);
-			
+
 			write(Keys.HOME);
 			ReadPETmateJSON("ominousforeshadowing/resources/art/10x10-test.json");
 			sleep(5000);
-			
-			
+
 		}
 
 		private void ReadPETmateJSON(String File) throws Exception {
@@ -61,7 +60,7 @@ public class CityXenBBS extends PetsciiThread {
 
 			for(int i = 0; i < 32; i++)    { codehash.put(i,i+64);  }
 			for(int i = 64; i < 96; i++)   { codehash.put(i,i+128); }
-			for(int i = 96; i < 128; i++)  { codehash.put(i,i+64);  }			
+			for(int i = 96; i < 128; i++)  { codehash.put(i,i+64);  }
 			for(int i = 128; i < 160; i++) { codehash.put(i,i-64);  }
 			for(int i = 160; i < 192; i++) { codehash.put(i,i-128); }
 			for(int i = 224; i < 256; i++) { codehash.put(i,i-64);  }
@@ -77,7 +76,7 @@ public class CityXenBBS extends PetsciiThread {
 			colorhash.put(6,Colors.BLUE);
 			colorhash.put(7,Colors.YELLOW);
 			colorhash.put(8,Colors.ORANGE);
-			colorhash.put(9,Colors.BROWN);			
+			colorhash.put(9,Colors.BROWN);
 			colorhash.put(10,Colors.LIGHT_RED);
 			colorhash.put(11,Colors.GREY1);
 			colorhash.put(12,Colors.GREY2);
@@ -110,6 +109,8 @@ public class CityXenBBS extends PetsciiThread {
 			Integer outcode;
 			Integer compcode;
 			int linecounter=0;
+			int linecounter2=0;
+			int heightcounter=0;
 			int DrawSize=screencodes.size();
 			// if(width==40) { DrawSize--; }
 
@@ -119,7 +120,7 @@ public class CityXenBBS extends PetsciiThread {
 						write(Keys.RETURN);
 						linecounter=0;
 					}
-				}				
+				}
 				outcolor = colorhash.get((int) (long) colors.get(i));
 				if(lastcolor!=outcolor) {
 					write(outcolor);
@@ -133,7 +134,16 @@ public class CityXenBBS extends PetsciiThread {
 					outcode=compcode;
 				}
 				write(outcode);
+
 				linecounter++;
+				linecounter2++;
+				if(linecounter2 == width) {
+					linecounter2=0;
+					heightcounter++;
+					if(heightcounter>height) {
+						break;
+					}
+				}
 			}
 		};
 

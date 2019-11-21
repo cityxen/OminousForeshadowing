@@ -2,6 +2,16 @@ package net.cityxen.cxnbbs.bbs;
 
 import java.util.List;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import java.io.FileReader;
+// import java.io.FileNotFoundException;
+// import java.io.PrintWriter;
+// import java.util.LinkedHashMap; 
+// import java.util.Map; 
+// import java.util.Iterator;
+
 import eu.sblendorio.bbs.core.Colors;
 import eu.sblendorio.bbs.core.Keys;
 import eu.sblendorio.bbs.core.PetsciiThread;
@@ -27,6 +37,9 @@ public class CityXenBBS extends PetsciiThread {
 			for (Security security : groups) {
 				print(security.getName()+"\r");
 			}
+
+			ReadPETmateJSON("resources/art/ominousforeshadowing1.json");
+
 		}
 
 		private void logo() throws Exception {
@@ -46,6 +59,35 @@ public class CityXenBBS extends PetsciiThread {
 			-57, -63, -51, -59, -45, 13, 18, 28, -95, -110, 32, 32, -95, 18, -95, -110,
 			32, 32, 18, -95, -110, 32, -65, -66, -68, -94, -66, 32, -65, -66, -68, -94,
 			-66, 18, -68, -110, 13
+		};
+
+
+		private void ReadPETmateJSON(String File) throws Exception {
+			/*
+			 petmate json format:
+			 {
+				framebufs: [{
+					screencodes: [1,2,3,etc...]
+					colors: [1,2,3,4,etc]
+				}
+				]
+			}
+			*/
+			Object jpars = new JSONParser().parse(new FileReader(File));
+			JSONObject json = (JSONObject) jpars;
+			JSONArray framebufs = (JSONArray) json.get("framebufs");
+			System.out.println(((JSONObject) framebufs.get(0)).get("screencodes"));
+			System.out.println(((JSONObject) framebufs.get(0)).get("colors"));
+			//System.out.println(screencodes);
+			//  print(jscn.toString());
+			// "screencodes"
+			// String screencodes = json.getJSONObject("framebufs").getString("screencodes");
+			//for (int i = 0; i < jarr.size(); i++) {
+    			// JSONObject code = jarr.getJSONObject(i); 
+				// println(id + ", " + species + ", " + name);
+			//}
+			// String screencodes = arr.getJSONObject(0).ge
+			// write(jarr.toString());
 		};
 }
 

@@ -26,7 +26,7 @@ public class CityXenBBS extends PetsciiThread {
 	    	write(Keys.CLR);
 			write(Colors.RED);
 			print("Welcome to Ominous Foreshadowing...\r");
-			//sleep(5000);
+			sleep(3000);
 
 			write(Colors.GREEN);
 			print("Security Groups\r");
@@ -34,7 +34,10 @@ public class CityXenBBS extends PetsciiThread {
 			for (Security security : groups) {
 				print(security.getName()+"\r");
 			}
-			//sleep(5000);
+			sleep(2000);
+
+			ReadPETmateJSON("ominousforeshadowing/resources/art/cityxen-logo.json");
+			sleep(5000);
 
 			ReadPETmateJSON("ominousforeshadowing/resources/art/cityxen-logo-1.json");
 			sleep(5000);

@@ -44,9 +44,7 @@ public class CityXenBBS extends PetsciiThread {
 		print("\rfinished initializing...\r");
 		sleep(1500);
 
-		if(!DoLogin()) {
-			Disconnect();
-		}
+		DoLogin();
 		
 		PETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing1.json");
 		sleep(5000);

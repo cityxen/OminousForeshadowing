@@ -47,6 +47,7 @@ public class CityXenBBS extends PetsciiThread {
 		if(DoLogin() == false) {
 			write(Keys.CLR);
 			print("too many invalid login attempts...");
+			PETmateJSON("ominousforeshadowing/resources/art/goodbye.json",5,5);
 			return;
 		}
 		

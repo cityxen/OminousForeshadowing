@@ -29,24 +29,12 @@ public class RenderPETMate {
 
 		final HashMap<Integer, Integer> codehash = new HashMap<Integer, Integer>();
 
-		for (int i = 0; i < 32; i++) {
-			codehash.put(i, i + 64);
-		}
-		for (int i = 64; i < 96; i++) {
-			codehash.put(i, i + 128);
-		}
-		for (int i = 96; i < 128; i++) {
-			codehash.put(i, i + 64);
-		}
-		for (int i = 128; i < 160; i++) {
-			codehash.put(i, i - 64);
-		}
-		for (int i = 160; i < 192; i++) {
-			codehash.put(i, i - 128);
-		}
-		for (int i = 224; i < 256; i++) {
-			codehash.put(i, i - 64);
-		}
+        for (int i = 0; i < 32; i++)    { codehash.put(i, i + 64); }
+        for (int i = 64; i < 96; i++)   { codehash.put(i, i + 128); }
+        for (int i = 96; i < 128; i++)  { codehash.put(i, i + 64); }
+        for (int i = 128; i < 160; i++) { codehash.put(i, i - 64); }
+        for (int i = 160; i < 192; i++) { codehash.put(i, i - 128); }
+        for (int i = 224; i < 256; i++) { codehash.put(i, i - 64); }
 
 		final HashMap<Integer, Integer> colorhash = new HashMap<Integer, Integer>();
 
@@ -84,12 +72,13 @@ public class RenderPETMate {
 		}
 		Integer outcolor;
 		Integer lastcolor = null;
+        Boolean reverseStatus = false;
 		Integer outcode;
 		Integer compcode;
 		int linecounter = 0;
 		int linecounter2 = 0;
 		int heightcounter = 0;
-		final int DrawSize = screencodes.size();
+		int DrawSize = screencodes.size();
 		for (int i = 0; i < DrawSize; i++) {
 			if(width<40) {
 				if(linecounter==width) {
@@ -106,8 +95,19 @@ public class RenderPETMate {
 				lastcolor=outcolor;
 			}
 			outcode  = (int)(long)screencodes.get(i);
-			if(outcode>127) pst.write(Keys.REVON);
-			else pst.write(Keys.REVOFF);
+
+            if(outcode>127) {
+                if(reverseStatus == false) {
+                	pst.write(Keys.REVON);
+                    reverseStatus = true;
+                }
+            }
+            else {
+                if(reverseStatus == true) {
+                	pst.write(Keys.REVOFF);
+                    reverseStatus = false;
+                }
+            }
 			compcode = codehash.get(outcode);
 			if(compcode!=null) {
 				outcode=compcode;

@@ -47,7 +47,8 @@ public class CityXenBBS extends PetsciiThread {
 		if(DoLogin() == false) {
 			write(Keys.CLR);
 			print("too many invalid login attempts...");
-			PETmateJSON("ominousforeshadowing/resources/art/goodbye.json",5,5);
+			PETmateJSON("ominousforeshadowing/resources/art/goodbye.json",5,3);
+			print(" \r");
 			return;
 		}
 		
@@ -60,15 +61,21 @@ public class CityXenBBS extends PetsciiThread {
 
 	private Boolean DoLogin() throws Exception {
 		// LOGIN Screen
-		write(Keys.CLR);
-		PETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing3.json");
-		gotoXY(22,14);
-		write(Colors.RED);
-		String username = readLine();
-		gotoXY(22,15);
-		String password = readPassword();
-		System.out.println("LOGIN: USER: "+username+" PASS: "+password);
-		return true;
+		for(int i=0;i<3;i++) {
+			write(Keys.CLR);
+			PETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing3.json");
+			gotoXY(22,14);
+			write(Colors.RED);
+			String username = readLine();
+			gotoXY(22,15);
+			String password = readPassword();
+			System.out.println("LOGIN: USER: "+username+" PASS: "+password);
+			if(username.equals("new")) {
+				return true;
+			}
+			// do further security tests here
+		}
+		return false;
 	};
 
 	private void PETmateJSON(String File) throws Exception { PETmateJSON(File,0,0); };

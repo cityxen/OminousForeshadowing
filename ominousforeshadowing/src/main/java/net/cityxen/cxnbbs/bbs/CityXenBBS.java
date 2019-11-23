@@ -23,6 +23,10 @@ public class CityXenBBS extends PetsciiThread {
 
 	@Override
 	public void doLoop() throws Exception {
+
+		//////////////////////////////////////////////////////////////////////////////
+		// WELCOME SCREEN
+
 		write(Keys.CLR);
 		PETmateJSON("ominousforeshadowing/resources/art/cityxen-logo.json");
 		write(Colors.GREEN);
@@ -32,9 +36,9 @@ public class CityXenBBS extends PetsciiThread {
 		sleep(1500);
 		print("\rsecurity groups:\r");
 		sleep(500);
-		List<Security> groups = securityRepository.findAll();
-		for (Security security : groups) {
-			print(security.getName()+"\r");
+		final List<Security> groups = securityRepository.findAll();
+		for (final Security security : groups) {
+			print(security.getName() + "\r");
 		}
 		sleep(2000);
 		print("\rinit filesystem...\r");
@@ -44,33 +48,55 @@ public class CityXenBBS extends PetsciiThread {
 		print("\rfinished initializing...\r");
 		sleep(1500);
 
-		if(DoLogin() == false) {
+		//////////////////////////////////////////////////////////////////////////////
+		// LOGIN
+
+		if (DoLogin(3) == false) {
 			write(Keys.CLR);
 			print("too many invalid login attempts...");
-			PETmateJSON("ominousforeshadowing/resources/art/goodbye.json",5,3);
-			print(" \r");
+			// add invalid login artwork screen to show here
+			PETmateJSON("ominousforeshadowing/resources/art/goodbye.json", 5, 2);
+			print("\r");
 			return;
 		}
-		
+
+		//////////////////////////////////////////////////////////////////////////////
+		// INTRO SEQUENCE (ie; NEWS, MESSAGES, STARTUP SCRIPTS, ETC)
+
+		// NOTHING HERE YET
+
+		//////////////////////////////////////////////////////////////////////////////
+		// MAIN LOOP
+
+		Boolean LoggedIn = true;
+		while (LoggedIn) {
+
+			// LOGOUT
+			LoggedIn = false;
+		}
+
+		//////////////////////////////////////////////////////////////////////////////
+		// LOGOUT SEQUENCE
+
 		PETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing1.json");
 		sleep(5000);
-		PETmateJSON("ominousforeshadowing/resources/art/goodbye.json",5,19);
+		PETmateJSON("ominousforeshadowing/resources/art/goodbye.json", 5, 19);
 		sleep(5000);
 
 	}
 
-	private Boolean DoLogin() throws Exception {
+	private Boolean DoLogin(final Integer NumTries) throws Exception {
 		// LOGIN Screen
-		for(int i=0;i<3;i++) {
+		for (int i = 0; i < NumTries; i++) {
 			write(Keys.CLR);
 			PETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing3.json");
-			gotoXY(22,14);
+			gotoXY(22, 14);
 			write(Colors.RED);
-			String username = readLine();
-			gotoXY(22,15);
-			String password = readPassword();
-			System.out.println("LOGIN: USER: "+username+" PASS: "+password);
-			if(username.equals("new")) {
+			final String username = readLine(16);
+			gotoXY(22, 15);
+			final String password = readPassword();
+			System.out.println("LOGIN: USER: " + username + " PASS: " + password);
+			if (username.equals("new")) {
 				return true;
 			}
 			// do further security tests here
@@ -78,58 +104,77 @@ public class CityXenBBS extends PetsciiThread {
 		return false;
 	};
 
-	private void PETmateJSON(String File) throws Exception { PETmateJSON(File,0,0); };
-	private void PETmateJSON(String File, Integer XLoc, Integer YLoc) throws Exception {
-	
-		gotoXY(XLoc,YLoc);
+	private void PETmateJSON(final String File) throws Exception {
+		PETmateJSON(File, 0, 0);
+	};
 
-		HashMap<Integer,Integer> codehash =new HashMap<Integer,Integer>();
+	private void PETmateJSON(final String File, final Integer XLoc, final Integer YLoc) throws Exception {
 
-		for(int i = 0; i < 32; i++)    { codehash.put(i,i+64);  }
-		for(int i = 64; i < 96; i++)   { codehash.put(i,i+128); }
-		for(int i = 96; i < 128; i++)  { codehash.put(i,i+64);  }
-		for(int i = 128; i < 160; i++) { codehash.put(i,i-64);  }
-		for(int i = 160; i < 192; i++) { codehash.put(i,i-128); }
-		for(int i = 224; i < 256; i++) { codehash.put(i,i-64);  }
+		gotoXY(XLoc, YLoc);
 
-		HashMap<Integer,Integer> colorhash=new HashMap<Integer,Integer>();
+		final HashMap<Integer, Integer> codehash = new HashMap<Integer, Integer>();
 
-		colorhash.put(0,Colors.BLACK);
-		colorhash.put(1,Colors.WHITE);
-		colorhash.put(2,Colors.RED);
-		colorhash.put(3,Colors.CYAN);
-		colorhash.put(4,Colors.PURPLE);
-		colorhash.put(5,Colors.GREEN);
-		colorhash.put(6,Colors.BLUE);
-		colorhash.put(7,Colors.YELLOW);
-		colorhash.put(8,Colors.ORANGE);
-		colorhash.put(9,Colors.BROWN);
-		colorhash.put(10,Colors.LIGHT_RED);
-		colorhash.put(11,Colors.GREY1);
-		colorhash.put(12,Colors.GREY2);
-		colorhash.put(13,Colors.LIGHT_GREEN);
-		colorhash.put(14,Colors.LIGHT_BLUE);
-		colorhash.put(15,Colors.GREY3);
+		for (int i = 0; i < 32; i++) {
+			codehash.put(i, i + 64);
+		}
+		for (int i = 64; i < 96; i++) {
+			codehash.put(i, i + 128);
+		}
+		for (int i = 96; i < 128; i++) {
+			codehash.put(i, i + 64);
+		}
+		for (int i = 128; i < 160; i++) {
+			codehash.put(i, i - 64);
+		}
+		for (int i = 160; i < 192; i++) {
+			codehash.put(i, i - 128);
+		}
+		for (int i = 224; i < 256; i++) {
+			codehash.put(i, i - 64);
+		}
 
-		Object jpars = new JSONParser().parse(new FileReader(File));
-		JSONObject json = (JSONObject) jpars;
-		JSONArray framebufs = (JSONArray) json.get("framebufs");
-		JSONArray screencodes = (JSONArray) ((JSONObject) framebufs.get(0)).get("screencodes");
-		JSONArray colors = (JSONArray) ((JSONObject) framebufs.get(0)).get("colors");
-		String charset = (String) ((JSONObject)framebufs.get(0)).get("charset");
-		Long width  = (Long) ((JSONObject)framebufs.get(0)).get("width");
-		Long height = (Long) ((JSONObject)framebufs.get(0)).get("height");
-		// System.out.println("\nFile: "+File+" (CHARSET: ["+charset+"] WIDTH: ["+width+"] HEIGHT: ["+height+"])");
-		if(charset.equals((String)"upper")) { write(Keys.UPPERCASE,Keys.CASE_LOCK); }
-		else { write(Keys.LOWERCASE,Keys.CASE_LOCK); }
+		final HashMap<Integer, Integer> colorhash = new HashMap<Integer, Integer>();
+
+		colorhash.put(0, Colors.BLACK);
+		colorhash.put(1, Colors.WHITE);
+		colorhash.put(2, Colors.RED);
+		colorhash.put(3, Colors.CYAN);
+		colorhash.put(4, Colors.PURPLE);
+		colorhash.put(5, Colors.GREEN);
+		colorhash.put(6, Colors.BLUE);
+		colorhash.put(7, Colors.YELLOW);
+		colorhash.put(8, Colors.ORANGE);
+		colorhash.put(9, Colors.BROWN);
+		colorhash.put(10, Colors.LIGHT_RED);
+		colorhash.put(11, Colors.GREY1);
+		colorhash.put(12, Colors.GREY2);
+		colorhash.put(13, Colors.LIGHT_GREEN);
+		colorhash.put(14, Colors.LIGHT_BLUE);
+		colorhash.put(15, Colors.GREY3);
+
+		final Object jpars = new JSONParser().parse(new FileReader(File));
+		final JSONObject json = (JSONObject) jpars;
+		final JSONArray framebufs = (JSONArray) json.get("framebufs");
+		final JSONArray screencodes = (JSONArray) ((JSONObject) framebufs.get(0)).get("screencodes");
+		final JSONArray colors = (JSONArray) ((JSONObject) framebufs.get(0)).get("colors");
+		final String charset = (String) ((JSONObject) framebufs.get(0)).get("charset");
+		final Long width = (Long) ((JSONObject) framebufs.get(0)).get("width");
+		final Long height = (Long) ((JSONObject) framebufs.get(0)).get("height");
+		// System.out.println("\nFile: "+File+" (CHARSET: ["+charset+"] WIDTH:
+		// ["+width+"] HEIGHT: ["+height+"])");
+		if (charset.equals((String) "upper")) {
+			write(Keys.UPPERCASE, Keys.CASE_LOCK);
+		} else {
+			write(Keys.LOWERCASE, Keys.CASE_LOCK);
+		}
 		Integer outcolor;
-		Integer lastcolor=null;
+		Integer lastcolor = null;
 		Integer outcode;
 		Integer compcode;
-		int linecounter=0;
-		int linecounter2=0;
-		int heightcounter=0;
-		int DrawSize=screencodes.size();
+		int linecounter = 0;
+		int linecounter2 = 0;
+		int heightcounter = 0;
+		final int DrawSize = screencodes.size();
 		for (int i = 0; i < DrawSize; i++) {
 			if(width<40) {
 				if(linecounter==width) {

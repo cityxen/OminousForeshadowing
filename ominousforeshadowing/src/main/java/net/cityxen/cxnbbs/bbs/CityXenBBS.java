@@ -104,34 +104,19 @@ public class CityXenBBS extends PetsciiThread {
 		return false;
 	};
 
-	private void PETmateJSON(final String File) throws Exception {
-		PETmateJSON(File, 0, 0);
-	};
-
+	private void PETmateJSON(final String File) throws Exception { PETmateJSON(File, 0, 0); };
 	private void PETmateJSON(final String File, final Integer XLoc, final Integer YLoc) throws Exception {
 
 		gotoXY(XLoc, YLoc);
 
 		final HashMap<Integer, Integer> codehash = new HashMap<Integer, Integer>();
 
-		for (int i = 0; i < 32; i++) {
-			codehash.put(i, i + 64);
-		}
-		for (int i = 64; i < 96; i++) {
-			codehash.put(i, i + 128);
-		}
-		for (int i = 96; i < 128; i++) {
-			codehash.put(i, i + 64);
-		}
-		for (int i = 128; i < 160; i++) {
-			codehash.put(i, i - 64);
-		}
-		for (int i = 160; i < 192; i++) {
-			codehash.put(i, i - 128);
-		}
-		for (int i = 224; i < 256; i++) {
-			codehash.put(i, i - 64);
-		}
+		for (int i = 0; i < 32; i++)    { codehash.put(i, i + 64); }
+		for (int i = 64; i < 96; i++)   { codehash.put(i, i + 128); }
+		for (int i = 96; i < 128; i++)  { codehash.put(i, i + 64); }
+		for (int i = 128; i < 160; i++) { codehash.put(i, i - 64); }
+		for (int i = 160; i < 192; i++) { codehash.put(i, i - 128); }
+		for (int i = 224; i < 256; i++) { codehash.put(i, i - 64); }
 
 		final HashMap<Integer, Integer> colorhash = new HashMap<Integer, Integer>();
 
@@ -160,24 +145,26 @@ public class CityXenBBS extends PetsciiThread {
 		final String charset = (String) ((JSONObject) framebufs.get(0)).get("charset");
 		final Long width = (Long) ((JSONObject) framebufs.get(0)).get("width");
 		final Long height = (Long) ((JSONObject) framebufs.get(0)).get("height");
-		// System.out.println("\nFile: "+File+" (CHARSET: ["+charset+"] WIDTH:
-		// ["+width+"] HEIGHT: ["+height+"])");
+
 		if (charset.equals((String) "upper")) {
 			write(Keys.UPPERCASE, Keys.CASE_LOCK);
 		} else {
 			write(Keys.LOWERCASE, Keys.CASE_LOCK);
 		}
+
 		Integer outcolor;
 		Integer lastcolor = null;
+		Boolean reverseStatus = false;
 		Integer outcode;
 		Integer compcode;
 		int linecounter = 0;
 		int linecounter2 = 0;
 		int heightcounter = 0;
-		final int DrawSize = screencodes.size();
+		Integer DrawSize = screencodes.size();
+
 		for (int i = 0; i < DrawSize; i++) {
 			if(width<40) {
-				if(linecounter==width) {
+				if(linecounter == width) {
 					write(Keys.DOWN);
 					for(int zz=0;zz<width;zz++) {
 						write(Keys.LEFT);
@@ -186,18 +173,34 @@ public class CityXenBBS extends PetsciiThread {
 				}
 			}
 			outcolor = colorhash.get((int) (long) colors.get(i));
+
 			if(lastcolor!=outcolor) {
 				write(outcolor);
 				lastcolor=outcolor;
 			}
+
 			outcode  = (int)(long)screencodes.get(i);
-			if(outcode>127) write(Keys.REVON);
-			else write(Keys.REVOFF);
+
+			if(outcode>127) {
+				if(reverseStatus == false) {
+					write(Keys.REVON);
+					reverseStatus = true;
+				}
+			}
+			else {
+				if(reverseStatus == true) {
+					write(Keys.REVOFF);
+					reverseStatus = false;
+				}
+			}
+
 			compcode = codehash.get(outcode);
 			if(compcode!=null) {
 				outcode=compcode;
 			}
+
 			write(outcode);
+
 			linecounter++;
 			linecounter2++;
 			if(linecounter2 == width) {

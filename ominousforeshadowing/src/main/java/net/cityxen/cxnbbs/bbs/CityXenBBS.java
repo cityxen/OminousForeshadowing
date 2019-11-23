@@ -44,7 +44,11 @@ public class CityXenBBS extends PetsciiThread {
 		print("\rfinished initializing...\r");
 		sleep(1500);
 
-		DoLogin();
+		if(DoLogin() == false) {
+			write(Keys.CLR);
+			print("too many invalid login attempts...");
+			return;
+		}
 		
 		PETmateJSON("ominousforeshadowing/resources/art/ominousforeshadowing1.json");
 		sleep(5000);

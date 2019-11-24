@@ -8,6 +8,4 @@ public class CoreBBS extends Module {
 		super(pst);
 	}
 
-
-
 }

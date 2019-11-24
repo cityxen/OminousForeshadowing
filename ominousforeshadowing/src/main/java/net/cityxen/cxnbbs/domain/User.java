@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Document(collection = "user")
 public class User {
-	
+
 	@Id
 	private String id;
 	private String username;
@@ -16,6 +16,5 @@ public class User {
 	private int securityLevel;
 	private String email;
 	private String password;
-	
 
 }

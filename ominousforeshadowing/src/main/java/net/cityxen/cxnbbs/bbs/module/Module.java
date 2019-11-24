@@ -13,49 +13,46 @@ import net.cityxen.cxnbbs.domain.User;
 import net.cityxen.cxnbbs.util.RenderPETMate;
 import net.cityxen.cxnbbs.util.SpringContext;
 
-
 public abstract class Module {
 	MenuRepository menuRepository = SpringContext.getBean(MenuRepository.class);
 	private final static Logger LOGGER = LoggerFactory.getLogger(Module.class);
 	PetsciiThread pst;
 	RenderPETMate render;
-	
+
 	private static final String LOGOUT = "logout";
-	
+
 	public Module(PetsciiThread pst) {
 		this.pst = pst;
 	}
-	
-	public void startModule (User user, String action, Boolean isShortMenu) throws Exception{
-		displayMenu(action,user,isShortMenu);
+
+	public void startModule(User user, String action, Boolean isShortMenu) throws Exception {
+		displayMenu(action, user, isShortMenu);
 		String nextAction = readInput(action, user);
-		if(null!=nextAction) {
-			//Todo nextaction
+		if (null != nextAction) {
+			// Todo nextaction
 			LOGGER.info("Next Action: " + nextAction);
 			ActionProcessor ap = new ActionProcessor(pst);
 			ap.startModule(user, nextAction, isShortMenu);
-		}else {
-			//Todo display error for invalid input
+		} else {
+			// Todo display error for invalid input
 		}
- 	}
+	}
 
-	
-	private String readInput( String action, User user) throws Exception {
+	private String readInput(String action, User user) throws Exception {
 		String input = pst.readLine(1);
 		String actionOut = null;
-		if(input.equalsIgnoreCase("?")) {
+		if (input.equalsIgnoreCase("?")) {
 			startModule(user, action, false);
-		}else if(input.equalsIgnoreCase("x")) {
+		} else if (input.equalsIgnoreCase("x")) {
 			actionOut = LOGOUT;
-		}else {
-			
-			//TODO refactor to check security against this
+		} else {
+
+			// TODO refactor to check security against this
 			Menu menu = menuRepository.mapAll().get(action);
 			actionOut = menu.getActionByHotkey(input);
 		}
 		return actionOut;
 	}
-
 
 	private void displayMenu(String action, User user, Boolean isShortMenu) {
 
@@ -67,16 +64,16 @@ public abstract class Module {
 			pst.print(":[");
 		}
 		int count = 0;
-		int target =menu.getMenuItems().size(); 
+		int target = menu.getMenuItems().size();
 
 		for (MenuItem item : menu.getMenuItems()) {
-			count+=1;
+			count += 1;
 			if (user.getSecurityLevel() >= item.getSecurityLevel()) {
-				//TODO fix delimiter when not rendering becuase of security level
-				renderItem(isShortMenu, item.getHotkey(), item.getDisplayName(), count<target);
+				// TODO fix delimiter when not rendering becuase of security level
+				renderItem(isShortMenu, item.getHotkey(), item.getDisplayName(), count < target);
 			}
 		}
-		
+
 		if (isShortMenu) {
 			pst.print(",");
 			renderItem(isShortMenu, "?", "help", false);
@@ -87,45 +84,46 @@ public abstract class Module {
 		}
 		if (isShortMenu) {
 			pst.print("]:");
-		}else {
+		} else {
 			pst.print("\r choice: ");
 		}
 
 	}
-	
+
 	private void renderItem(Boolean isShortMenu, String hotkey, String displayName, Boolean hasNext) {
 		int indent = 1;
-		if(isShortMenu) {
+		if (isShortMenu) {
 			pst.write(Keys.REVON, Colors.WHITE);
 			pst.print(hotkey.toLowerCase());
 			pst.write(Keys.REVOFF, Colors.GREEN);
-			if(hasNext) {
-				pst.print(",");	
+			if (hasNext) {
+				pst.print(",");
 			}
-		}else {
-			pst.write(Keys.REVON, Colors.WHITE); 
-	        pst.print("\r"+" ".repeat(indent) +hotkey.toLowerCase() +" ".repeat(indent));
+		} else {
+			pst.write(Keys.REVON, Colors.WHITE);
+			pst.print("\r" + " ".repeat(indent) + hotkey.toLowerCase() + " ".repeat(indent));
 			pst.write(Keys.REVOFF, Colors.GREEN);
 			pst.print(displayName.toLowerCase());
 		}
 	}
+
 	private void renderMenuTop(Boolean isShortMenu, String displayName) {
 		int menuspace = 3;
-		if(isShortMenu) {
+		if (isShortMenu) {
 			pst.write(Keys.UPPERCASE, Keys.CASE_LOCK);
-			pst.gotoXY(0,24);
+			pst.gotoXY(0, 24);
 			pst.write(Keys.REVOFF, Colors.WHITE);
-			pst.print(displayName.toLowerCase()); 
+			pst.print(displayName.toLowerCase());
 			pst.write(Keys.REVOFF, Colors.GREEN);
-		}else {
+		} else {
 			pst.cls();
 			pst.write(Keys.UPPERCASE, Keys.CASE_LOCK);
 			pst.write(Keys.REVOFF, Colors.WHITE);
-			pst.print("\r" + " ".repeat(menuspace) +displayName.toLowerCase() +":"); 
-			pst.print("\r" + " ".repeat(menuspace) +"-".repeat(displayName.length()+1));
+			pst.print("\r" + " ".repeat(menuspace) + displayName.toLowerCase() + ":");
+			pst.print("\r" + " ".repeat(menuspace) + "-".repeat(displayName.length() + 1));
 			pst.write(Keys.REVOFF, Colors.GREEN);
 		}
-		
+
 	}
-		
+
 }

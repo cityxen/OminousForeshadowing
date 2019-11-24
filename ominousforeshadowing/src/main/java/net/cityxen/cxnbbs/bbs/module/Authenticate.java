@@ -16,20 +16,20 @@ public class Authenticate extends Module {
 
 	UserRepository userRepository = SpringContext.getBean(UserRepository.class);
 	private static final Logger LOGGER = LoggerFactory.getLogger(Authenticate.class);
-	private static final int LOGINATTEMPTS = 3; 
+	private static final int LOGINATTEMPTS = 3;
 	PetsciiThread pst;
-	
+
 	public Authenticate(PetsciiThread pst) {
 		super(pst);
-		this.pst=pst;
+		this.pst = pst;
 		this.render = new RenderPETMate(pst);
 	}
-	
+
 	public void startModule(User user, String action) throws Exception {
 		render.drawFromFile("ominousforeshadowing/resources/art/cityxen-logo.json");
 		pst.write(Colors.GREEN);
-		pst.print("\rwelcome to ominous foreshadowing v"+CityXenBBS.getVersion()+"..\r");
-		Thread.sleep(3000);		
+		pst.print("\rwelcome to ominous foreshadowing v" + CityXenBBS.getVersion() + "..\r");
+		Thread.sleep(3000);
 		pst.print("initializing...\r");
 		Thread.sleep(2000);
 		pst.print("\rinit filesystem...\r");
@@ -41,20 +41,21 @@ public class Authenticate extends Module {
 
 		//////////////////////////////////////////////////////////////////////////////
 		// LOGIN
-		if ((user=doLogin(LOGINATTEMPTS)) == null) {
+		if ((user = doLogin(LOGINATTEMPTS)) == null) {
 			pst.write(Keys.CLR);
 			pst.print("too many invalid login attempts...");
 			// add invalid login artwork screen to show here
 			render.drawFromFile("ominousforeshadowing/resources/art/goodbye.json", 5, 2);
 			pst.print("\r");
 			return;
-		}else {
+		} else {
 			LOGGER.debug("Calling Main Menu processor");
 			CoreBBS module = new CoreBBS(pst);
 			module.startModule(user, "main", true);
 		}
-		
+
 	}
+
 	private User doLogin(int NumTries) throws Exception {
 		// LOGIN Screen
 		for (int i = 0; i < NumTries; i++) {
@@ -64,23 +65,21 @@ public class Authenticate extends Module {
 			pst.write(Colors.RED);
 			final String username = pst.readLine(16);
 			if (username.equalsIgnoreCase("new")) {
-				//TODO Call registartuion
+				// TODO Call registartuion
 				return null;
 			}
 			pst.gotoXY(22, 15);
 			final String password = pst.readPassword();
 			LOGGER.debug("Attempted LOGIN as : USER: " + username + " PASS: " + password);
 			User user = userRepository.findByUsername(username);
-			if(user!=null) {
-				LOGGER.debug("User:"+user.toString());
-				//TODO add login date time stamp to user account 
-				//TODO password hash matching etc
-				return user; 
+			if (user != null) {
+				LOGGER.debug("User:" + user.toString());
+				// TODO add login date time stamp to user account
+				// TODO password hash matching etc
+				return user;
 			}
 		}
 		return null;
 	};
 
-	
-	
 }

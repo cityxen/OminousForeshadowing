@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @Document(collection = "menu")
 public class Menu {
-	
+
 	@Id
 	private String id;
 	private String displayName;
@@ -24,9 +24,9 @@ public class Menu {
 	public String getActionByHotkey(String key) {
 
 		String result = null;
-		Map<String, String> menuItemsMap = this.menuItems.stream().collect(
-	                Collectors.toMap(MenuItem::getHotkey, MenuItem::getAction));
+		Map<String, String> menuItemsMap = this.menuItems.stream()
+				.collect(Collectors.toMap(MenuItem::getHotkey, MenuItem::getAction));
 		result = menuItemsMap.get(key);
-		return result; 
+		return result;
 	}
 }

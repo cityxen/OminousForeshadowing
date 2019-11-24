@@ -22,6 +22,7 @@ public class Menu {
 	private List<MenuItem> menuItems;
 
 	public String getActionByHotkey(String key) {
+
 		String result = null;
 		Map<String, String> menuItemsMap = this.menuItems.stream().collect(
 	                Collectors.toMap(MenuItem::getHotkey, MenuItem::getAction));

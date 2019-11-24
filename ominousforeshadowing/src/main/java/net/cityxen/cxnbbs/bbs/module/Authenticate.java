@@ -18,15 +18,14 @@ public class Authenticate extends Module {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Authenticate.class);
 	private static final int LOGINATTEMPTS = 3; 
 	PetsciiThread pst;
-	RenderPETMate render;
 	
 	public Authenticate(PetsciiThread pst) {
 		super(pst);
 		this.pst=pst;
+		this.render = new RenderPETMate(pst);
 	}
 	
 	public void startModule(User user, String action) throws Exception {
-		this.render = new RenderPETMate(pst);
 		render.drawFromFile("ominousforeshadowing/resources/art/cityxen-logo.json");
 		pst.write(Colors.GREEN);
 		pst.print("\rwelcome to ominous foreshadowing v"+CityXenBBS.getVersion()+"..\r");
@@ -42,7 +41,7 @@ public class Authenticate extends Module {
 
 		//////////////////////////////////////////////////////////////////////////////
 		// LOGIN
-		if (doLogin(LOGINATTEMPTS) == null) {
+		if ((user=doLogin(LOGINATTEMPTS)) == null) {
 			pst.write(Keys.CLR);
 			pst.print("too many invalid login attempts...");
 			// add invalid login artwork screen to show here
@@ -50,8 +49,9 @@ public class Authenticate extends Module {
 			pst.print("\r");
 			return;
 		}else {
-			//TODO call main processor;
-			LOGGER.debug("Calling main processor");
+			LOGGER.debug("Calling Main Menu processor");
+			CoreBBS module = new CoreBBS(pst);
+			module.startModule(user, "main", true);
 		}
 		
 	}
@@ -73,6 +73,8 @@ public class Authenticate extends Module {
 			User user = userRepository.findByUsername(username);
 			if(user!=null) {
 				LOGGER.debug("User:"+user.toString());
+				//TODO add login date time stamp to user account 
+				//TODO password hash matching etc
 				return user; 
 			}
 		}

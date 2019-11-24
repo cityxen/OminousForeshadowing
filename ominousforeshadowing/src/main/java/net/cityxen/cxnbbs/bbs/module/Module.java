@@ -48,6 +48,8 @@ public abstract class Module {
 		}else if(input.equalsIgnoreCase("x")) {
 			actionOut = LOGOUT;
 		}else {
+			
+			//TODO refactor to check security against this
 			Menu menu = menuRepository.mapAll().get(action);
 			actionOut = menu.getActionByHotkey(input);
 		}
@@ -70,6 +72,7 @@ public abstract class Module {
 		for (MenuItem item : menu.getMenuItems()) {
 			count+=1;
 			if (user.getSecurityLevel() >= item.getSecurityLevel()) {
+				//TODO fix delimiter when not rendering becuase of security level
 				renderItem(isShortMenu, item.getHotkey(), item.getDisplayName(), count<target);
 			}
 		}

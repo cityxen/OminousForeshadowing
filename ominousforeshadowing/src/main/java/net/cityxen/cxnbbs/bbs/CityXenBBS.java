@@ -1,13 +1,9 @@
 package net.cityxen.cxnbbs.bbs;
 
-import java.util.List;
-
 import eu.sblendorio.bbs.core.Keys;
 import eu.sblendorio.bbs.core.PetsciiThread;
 import net.cityxen.cxnbbs.bbs.module.Authenticate;
-import net.cityxen.cxnbbs.bbs.module.CoreBBS;
 import net.cityxen.cxnbbs.dao.SecurityRepository;
-import net.cityxen.cxnbbs.domain.Security;
 import net.cityxen.cxnbbs.domain.User;
 import net.cityxen.cxnbbs.util.SpringContext;
 
